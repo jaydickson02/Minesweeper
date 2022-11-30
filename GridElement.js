@@ -15,6 +15,11 @@ class GridElement {
         }
     }
 
+    openGrid(grid) {
+        print("test");
+
+    }
+
     surroundingBombCount(grid) {
         let bombs = 0;
         let toCheck = [];

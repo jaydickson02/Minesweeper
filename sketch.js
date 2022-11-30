@@ -45,15 +45,17 @@ function mousePressed() {
 function draw() {
     background(255);
 
-    //Calculate Surrounding Bombs
-    for (let i = 0; i < grid.length; i++) {
-        grid[i].surroundingBombCount(grid);
-    }
+    
 
-    //Draw Elements
-    for (let i = 0; i < grid.length; i++) {
-        grid[i].draw();
-    }
+    //Draw a circle with the time in it
+    fill(0);
+    ellipse(50, 50, 100);
+    fill(255);
+    textSize(32);
+    text(frameCount, 25, 60);
+
+
+    
 }
 
 
