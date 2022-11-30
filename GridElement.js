@@ -66,40 +66,7 @@ class GridElement {
         this.surroundingCells = surroundingCells;
     }
 
-    unlockSurroundingCells(previousCheckedCells) {
 
-        this.isClicked(true);
-
-        let checkedCells = previousCheckedCells;
-        let cellsToCheck = []
-        let newCell;
-
-        //Checks for new surrounding cells that haven't been checked already
-        for (let i = 0; i < this.surroundingCells.length; i++) {
-            newCell = true;
-            for (let j = 0; j < checkedCells.length; j++) {
-                if (this.surroundingCells[i] == checkedCells[j]) {
-                    newCell = false;
-                }
-            }
-
-            //Adds cells if its new and has a surrounding bomb number of zero
-            if (newCell == true && this.surroundingCells[i].surroundingBombs == 0 && !this.surroundingCells.clicked) {
-                cellsToCheck.push(this.surroundingCells[i])
-            }
-        }
-
-        //Combines the previous checked cells and the current checked cells
-        let allCheckedCells = checkedCells.concat(cellsToCheck);
-
-        //Runs the function recursivly on all the new cells to check
-        if (cellsToCheck.length > 0) {
-            for (let i = 0; i < cellsToCheck.length; i++) {
-                cellsToCheck[i].unlockSurroundingCells(allCheckedCells);
-            }
-        }
-
-    }
 
     bfs_function() {
         let output = [];
@@ -109,12 +76,16 @@ class GridElement {
         visited.push(this);
         queue.push(this);
 
-        while (queue) {
+        while (queue.length > 0) {
+            
+            console.log(queue);
+            console.log(queue.length)
             let m = queue.shift(); //stops running the queue for some reason
+            console.log(m);
             output.push(m);
 
             let mGraph = m.surroundingCells;
-            console.log(mGraph.length);
+            
             for (let neighbour of mGraph) {
 
                 if (!visited.includes(neighbour)) {
@@ -123,7 +94,7 @@ class GridElement {
                     queue.push(neighbour);
                 }
             }
-            console.log(queue.length)
+            
         }
 
         //console.log(output.length);

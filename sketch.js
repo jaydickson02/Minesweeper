@@ -52,15 +52,12 @@ function mousePressed() {
 }
 
 function draw() {
-    background(255);
+    
+    //Draw grid
 
-
-    //Draw a circle with the time in it
-    fill(0);
-    ellipse(50, 50, 100);
-    fill(255);
-    textSize(32);
-    text(frameCount, 25, 60);
+    for (let element of grid){
+        element.draw()
+    }
 
 
     
