@@ -11,7 +11,7 @@ class GridElement {
 
     //Switch the click flag
     isClicked(bool) {
-        if (bool) {
+        if (bool && !this.flag) {
             this.clicked = true;
         } else if (!bool) {
             this.clicked = false;
@@ -19,11 +19,13 @@ class GridElement {
     }
 
     //Switch the flag flag haha
-    flag(){
-        if(this.flag == true){
-            this.flag == false;
-        } else {
-            this.flag == true;
+    flagged(){
+        if(!this.clicked){
+            if(this.flag == true){
+                this.flag = false;
+            } else {
+                this.flag = true;
+            }
         }
     }
 
@@ -94,7 +96,7 @@ class GridElement {
         visited.push(this);
         queue.push(this);
 
-        if(this.surroundingBombs == 0){
+        if(this.surroundingBombs == 0 && !this.flag){
 
         while (queue.length > 0) {
             
@@ -144,7 +146,8 @@ class GridElement {
             rect(this.position.x * scale, this.position.y * scale, scale, scale);
 
             fill(0);
-            if(this.surroundingBombs > 0){
+            if(!this.surroundingBombs == 0){
+                textSize(12);
                 text(this.surroundingBombs, this.position.x * this.scale + (this.scale / 2), this.position.y * this.scale + (this.scale / 2));
             }
             
@@ -157,7 +160,15 @@ class GridElement {
         } else if (!this.clicked) {
             fill(100, 100, 100);
             rect(this.position.x * scale, this.position.y * scale, scale, scale);
+
+            
         }
+
+        if(this.flag == true){
+            fill(0,0,255)
+            ellipse(this.position.x * this.scale + (this.scale / 2), this.position.y * this.scale + (this.scale / 2), scale/2)
+        }
+
 
         
 

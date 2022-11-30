@@ -1,7 +1,7 @@
 // Setup Values
-let gridWidth = 10; // Width of the grid
-let gridHeight = 10; // Height of the grid
-let bombPercentage = 0.1; // Percentage
+let gridWidth = 30; // Width of the grid
+let gridHeight = 30; // Height of the grid
+let bombPercentage = 0.2; // Percentage
 let bombNumber = bombPercentage * gridHeight * gridWidth;
 let scale = 30; // Scale of the grid in px
 let grid = []; // Stores all grid elements
@@ -15,8 +15,10 @@ let tempNumBombs = 0; //Temporary flag to track the number of bombs generated. F
 //}
 
 function setup() {
-    createCanvas(gridWidth * scale + 1, gridHeight * scale + 1);
+    const canvas = createCanvas(gridWidth * scale + 1, gridHeight * scale + 1);
     frameRate(10);
+
+    canvas.elt.addEventListener("contextmenu", (e) => e.preventDefault())
 
     //Grid Generation variables
     let type = "cell";
@@ -54,17 +56,13 @@ function setup() {
 function mousePressed() {
     if(!gameOver){
 
-        
-            
-        
-
         for (let i = 0; i < grid.length; i++) {
             //Collision Detection
             if (grid[i].position.x * scale < mouseX && grid[i].position.x * scale + scale > mouseX && grid[i].position.y * scale < mouseY && grid[i].position.y * scale + scale > mouseY) {
 
 
                 if (mouseButton == RIGHT) {
-                    grid[i].flag();
+                    grid[i].flagged();
                 } else {
                     grid[i].bfs_function();
                 }
@@ -102,8 +100,14 @@ function draw() {
     }
 
     if(gameFinished == true){
+
+        let coordx = width/2 - 60
+        let coordy = height/2
+        fill(255, 255, 255);
+        rect(coordx - 5, coordy - 30, 125, 35)
         fill(0);
-        text("Success", width/2, height/2);
+        textSize(30);
+        text("Success", coordx, coordy);
     }
 
     
