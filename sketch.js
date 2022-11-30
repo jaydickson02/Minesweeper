@@ -31,12 +31,21 @@ function setup() {
             grid.push(new GridElement(type, i, j, false, scale))
         }
     }
+
+    //Calculate Surrounding bombs and cells.
+    for (let i = 0; i < grid.length; i++) {
+        grid[i].evaluateSurroundingCells(grid);
+    }
 }
 
+//Register a mouse click on a given cell and set the clicked flag.
 function mousePressed() {
     for (let i = 0; i < grid.length; i++) {
+        //Collision Detection
         if (grid[i].position.x * scale < mouseX && grid[i].position.x * scale + scale > mouseX && grid[i].position.y * scale < mouseY && grid[i].position.y * scale + scale > mouseY) {
-            grid[i].isClicked(true);
+            //grid[i].isClicked(true);
+            //grid[i].unlockSurroundingCells([]);
+            grid[i].bfs_function()
         }
     }
     return false;
@@ -45,10 +54,6 @@ function mousePressed() {
 function draw() {
     background(255);
 
-    //Calculate Surrounding Bombs
-    for (let i = 0; i < grid.length; i++) {
-        grid[i].surroundingBombCount(grid);
-    }
 
     //Draw Elements
     for (let i = 0; i < grid.length; i++) {
