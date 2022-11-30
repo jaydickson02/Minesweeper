@@ -6,13 +6,24 @@ class GridElement {
         this.scale = scale;
         this.surroundingBombs = 0;
         this.surroundingCells = [];
+        this.flag = false;
     }
 
+    //Switch the click flag
     isClicked(bool) {
         if (bool) {
             this.clicked = true;
         } else if (!bool) {
             this.clicked = false;
+        }
+    }
+
+    //Switch the flag flag haha
+    flag(){
+        if(this.flag == true){
+            this.flag == false;
+        } else {
+            this.flag == true;
         }
     }
 
@@ -66,6 +77,13 @@ class GridElement {
         this.surroundingCells = surroundingCells;
     }
 
+    openSurroundingCells(){
+        for(let cell of this.surroundingCells){
+            if(cell.type == "cell"){
+                cell.isClicked(true);
+            }
+        }
+    }
 
 
     bfs_function() {
@@ -76,17 +94,24 @@ class GridElement {
         visited.push(this);
         queue.push(this);
 
+        if(this.surroundingBombs == 0){
+
         while (queue.length > 0) {
             
-            console.log(queue);
-            console.log(queue.length)
-            let m = queue.shift(); //stops running the queue for some reason
-            console.log(m);
-            output.push(m);
+            let node = queue.shift(); //stops running the queue for some reason
+            output.push(node);
 
-            let mGraph = m.surroundingCells;
-            
-            for (let neighbour of mGraph) {
+            let connectedCells = node.surroundingCells;
+            let nodeGraph = [];
+
+            for (let cell of connectedCells){
+                if(cell.type == "cell" && cell.surroundingBombs == 0){
+                    nodeGraph.push(cell);
+                }
+            }
+
+
+            for (let neighbour of nodeGraph) {
 
                 if (!visited.includes(neighbour)) {
                     //console.log(neighbour);
@@ -101,28 +126,40 @@ class GridElement {
 
         for (let element of output) {
             element.isClicked(true);
+            element.openSurroundingCells();
         }
+
+    } else {
+        this.isClicked(true);
+    }
 
     }
 
 
     draw() {
+
+        //Drawing rules if cell has been clicked.
         if (this.clicked) {
             fill(200, 200, 200);
             rect(this.position.x * scale, this.position.y * scale, scale, scale);
 
             fill(0);
-            text(this.surroundingBombs, this.position.x * this.scale + (this.scale / 2), this.position.y * this.scale + (this.scale / 2));
+            if(this.surroundingBombs > 0){
+                text(this.surroundingBombs, this.position.x * this.scale + (this.scale / 2), this.position.y * this.scale + (this.scale / 2));
+            }
+            
+            if (this.type == "bomb") {
+                fill(255, 0, 0);
+                rect(this.position.x * scale, this.position.y * scale, scale, scale);
+            }
 
+        //Drawing rules if cell has not been clicked.
         } else if (!this.clicked) {
             fill(100, 100, 100);
             rect(this.position.x * scale, this.position.y * scale, scale, scale);
         }
 
-        if (this.type == "bomb") {
-            fill(255, 0, 0);
-            rect(this.position.x * scale, this.position.y * scale, scale, scale);
-        }
+        
 
 
     }
