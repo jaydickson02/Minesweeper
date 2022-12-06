@@ -1,7 +1,7 @@
 // Setup Values
 let gridWidth = 20; // Width of the grid
 let gridHeight = 20; // Height of the grid
-let bombPercentage = 0.10; // Percentage
+let bombPercentage = 0.20; // Percentage
 let bombNumber = Math.floor(bombPercentage * gridHeight * gridWidth);
 let gridScale; // Scale of the grid in px
 let grid = []; // Stores all grid elements
