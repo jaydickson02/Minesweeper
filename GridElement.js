@@ -1,9 +1,9 @@
 class GridElement {
-    constructor(type, xVal, yVal, clickStatus, scale) {
+    constructor(type, xVal, yVal, clickStatus, gridScale) {
         this.type = type;
         this.position = { x: xVal, y: yVal };
         this.clicked = clickStatus;
-        this.scale = scale;
+        this.gridScale = gridScale;
         this.surroundingBombs = 0;
         this.surroundingCells = [];
         this.flag = false;
@@ -19,11 +19,11 @@ class GridElement {
     }
 
     //Switch the flag flag haha
-    flagged(){
-        if(!this.clicked){
-            if(this.flag == true){
+    flagged(canFlagStatus) {
+        if (!this.clicked) {
+            if (this.flag == true) {
                 this.flag = false;
-            } else {
+            } else if (canFlagStatus) {
                 this.flag = true;
             }
         }
@@ -79,9 +79,9 @@ class GridElement {
         this.surroundingCells = surroundingCells;
     }
 
-    openSurroundingCells(){
-        for(let cell of this.surroundingCells){
-            if(cell.type == "cell"){
+    openSurroundingCells() {
+        for (let cell of this.surroundingCells) {
+            if (cell.type == "cell") {
                 cell.isClicked(true);
             }
         }
@@ -96,44 +96,44 @@ class GridElement {
         visited.push(this);
         queue.push(this);
 
-        if(this.surroundingBombs == 0 && !this.flag){
+        if (this.surroundingBombs == 0 && !this.flag) {
 
-        while (queue.length > 0) {
-            
-            let node = queue.shift(); //stops running the queue for some reason
-            output.push(node);
+            while (queue.length > 0) {
 
-            let connectedCells = node.surroundingCells;
-            let nodeGraph = [];
+                let node = queue.shift(); //stops running the queue for some reason
+                output.push(node);
 
-            for (let cell of connectedCells){
-                if(cell.type == "cell" && cell.surroundingBombs == 0){
-                    nodeGraph.push(cell);
+                let connectedCells = node.surroundingCells;
+                let nodeGraph = [];
+
+                for (let cell of connectedCells) {
+                    if (cell.type == "cell" && cell.surroundingBombs == 0) {
+                        nodeGraph.push(cell);
+                    }
                 }
+
+
+                for (let neighbour of nodeGraph) {
+
+                    if (!visited.includes(neighbour)) {
+                        //console.log(neighbour);
+                        visited.push(neighbour);
+                        queue.push(neighbour);
+                    }
+                }
+
             }
 
+            //console.log(output.length);
 
-            for (let neighbour of nodeGraph) {
-
-                if (!visited.includes(neighbour)) {
-                    //console.log(neighbour);
-                    visited.push(neighbour);
-                    queue.push(neighbour);
-                }
+            for (let element of output) {
+                element.isClicked(true);
+                element.openSurroundingCells();
             }
-            
+
+        } else {
+            this.isClicked(true);
         }
-
-        //console.log(output.length);
-
-        for (let element of output) {
-            element.isClicked(true);
-            element.openSurroundingCells();
-        }
-
-    } else {
-        this.isClicked(true);
-    }
 
     }
 
@@ -142,35 +142,56 @@ class GridElement {
 
         //Drawing rules if cell has been clicked.
         if (this.clicked) {
-            fill(200, 200, 200);
-            rect(this.position.x * scale, this.position.y * scale, scale, scale);
 
-            fill(0);
-            if(!this.surroundingBombs == 0){
-                textSize(12);
-                text(this.surroundingBombs, this.position.x * this.scale + (this.scale / 2), this.position.y * this.scale + (this.scale / 2));
+            fill(210, 210, 210);
+            rect(this.position.x * this.gridScale, this.position.y * this.gridScale, this.gridScale, this.gridScale);
+
+
+            if (!this.surroundingBombs == 0) {
+
+                //fill with different colours depending on the number of surrounding bombs
+                if (this.surroundingBombs == 1) {
+                    fill(0, 128, 128);
+                } else if (this.surroundingBombs == 2) {
+                    fill(200, 150, 100);
+                } else if (this.surroundingBombs == 3) {
+                    fill(200, 80, 120);
+                } else if (this.surroundingBombs == 4) {
+                    fill(0, 0, 128);
+                } else if (this.surroundingBombs == 5) {
+                    fill(255, 0, 0);
+                } else if (this.surroundingBombs == 6) {
+                    fill(0, 0, 255);
+                } else if (this.surroundingBombs == 7) {
+                    fill(0, 0, 0);
+                } else if (this.surroundingBombs == 8) {
+                    fill(128, 128, 128);
+                }
+
+                textSize(this.gridScale / 2);
+                text(this.surroundingBombs, this.position.x * this.gridScale + (this.gridScale / 2.5), this.position.y * this.gridScale + (this.gridScale / 1.5));
             }
-            
+
             if (this.type == "bomb") {
                 fill(255, 0, 0);
-                rect(this.position.x * scale, this.position.y * scale, scale, scale);
+                rect(this.position.x * this.gridScale, this.position.y * this.gridScale, this.gridScale, this.gridScale);
             }
 
-        //Drawing rules if cell has not been clicked.
+            //Drawing rules if cell has not been clicked.
         } else if (!this.clicked) {
             fill(100, 100, 100);
-            rect(this.position.x * scale, this.position.y * scale, scale, scale);
+            rect(this.position.x * this.gridScale, this.position.y * this.gridScale, this.gridScale, this.gridScale);
 
-            
         }
 
-        if(this.flag == true){
-            fill(0,0,255)
-            ellipse(this.position.x * this.scale + (this.scale / 2), this.position.y * this.scale + (this.scale / 2), scale/2)
+        if (this.flag == true) {
+            fill(255)
+            ellipse(this.position.x * this.gridScale + (this.gridScale / 2), this.position.y * this.gridScale + (this.gridScale / 2), this.gridScale / 3)
+
         }
 
 
-        
+
 
 
     }
