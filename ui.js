@@ -66,7 +66,7 @@ class UI {
 
         //Set text size based on grid scale
         textSize(this.gridScale / 2);
-        text("Bombs: " + this.bombs, this.gridScale * 3, this.gridScale - 5);
+        text("Bombs: " + this.bombs, this.gridScale * 4.5, this.gridScale - 5);
 
     }
 
